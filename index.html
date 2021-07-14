@@ -26,6 +26,13 @@ inputElement.addEventListener('change', (e) => {
 imgElement.onload = function() {
   let img = cv.imread(imgElement);
   cv.cvtColor(img, img, cv.COLOR_RGBA2GRAY, 0);
+  let keypoints = SimpleBlobDetector.simpleBlobDetector(img, defaultParams);
+  for (const keypoint of keypoints) {
+        const center = new cv.Point(keypoint.pt.x, keypoint.pt.y);
+        cv.circle(img, center, keypoint.size, [255, 0, 0, 255], 3);
+        window.alert(keypoints);
+        window.alert("keypoints");
+    }
   cv.imshow('canvasOutput', img);
   img.delete();
 };
@@ -34,5 +41,6 @@ function onOpenCvReady() {
 }
 </script>
 <script async src="https://docs.opencv.org/4.5.3/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+<script async src="SimpleBlobDetector.js" type="text/javascript"></script>
 </body>
 </html>
