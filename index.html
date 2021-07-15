@@ -17,32 +17,31 @@
         <div class="caption">canvasOutput</div>
     </div>
 </div>
-<script type="module">
-    import "./SimpleBlobDetector.js";
-
+<script type="text/javascript">
     let imgElement = document.getElementById('imageSrc');
     let inputElement = document.getElementById('fileInput');
-
-    inputElement.addEventListener('change', (e) => {
-        imgElement.src = URL.createObjectURL(e.target.files[0]);
-    }, false);
-
-    function onOpenCvReady() {
-        document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
-    }
-
-    cv['onRuntimeInitialized']=()=>{
-        var img = cv.imread(imgElement);
+    inputElement.addEventListener('change', (e) => { imgElement.src = URL.createObjectURL(e.target.files[0]);}, false);
+    imgElement.onload = function() {
+        let img = cv.imread(imgElement);
         cv.cvtColor(img, img, cv.COLOR_RGBA2GRAY, 0);
-        var keypoints = simpleBlobDetector(img);
-        for (const keypoint of keypoints) {
-            const center = new cv.Point(keypoint.pt.x, keypoint.pt.y);
-            cv.circle(img, center, keypoint.size, [255, 0, 0, 255], 3);
+        cv.adaptiveThreshold(img, img, 200, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 25, 2);
+        let circles = new cv.Mat();
+        let color = new cv.Scalar(255, 0, 0);
+        cv.HoughCircles(img, circles, cv.HOUGH_GRADIENT, 1, 45, 75, 40, 0, 100);
+        for (let i = 0; i < circles.cols; ++i) {
+            let x = circles.data32F[i * 3];
+            let y = circles.data32F[i * 3 + 1];
+            let radius = circles.data32F[i * 3 + 2];
+            let center = new cv.Point(x, y);
+            cv.circle(img, center, radius, color);
         }
         cv.imshow('canvasOutput', img);
         img.delete();
+    };
+    function onOpenCvReady() {
+        document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
     }
-</script>
-<script src="https://docs.opencv.org/4.5.3/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+    </script>
+    <script async src="https://docs.opencv.org/4.5.3/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
 </body>
 </html>
