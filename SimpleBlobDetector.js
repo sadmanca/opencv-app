@@ -156,7 +156,7 @@ function findBlobs(image, binaryImage, params) {
   return centers;
 }
 
-export default function simpleBlobDetector(image, params) {
+function simpleBlobDetector(image, params) {
   params = { ...defaultParams, ...params };
 
   const grayScaleImage = new cv.Mat(image.rows, image.cols, cv.CV_8UC1);

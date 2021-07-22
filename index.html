@@ -1,47 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Hello OpenCV.js</title>
-</head>
-<body>
-<h2>Hello OpenCV.js</h2>
-<p id="status">OpenCV.js is loading...</p>
-<div>
-    <div class="inputoutput">
-        <img id="imageSrc" alt="No Image" />
-        <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
-    </div>
-    <div class="inputoutput">
-        <canvas id="canvasOutput" ></canvas>
-        <div class="caption">canvasOutput</div>
-    </div>
-</div>
-<script type="text/javascript">
-    let imgElement = document.getElementById('imageSrc');
-    let inputElement = document.getElementById('fileInput');
-    inputElement.addEventListener('change', (e) => { imgElement.src = URL.createObjectURL(e.target.files[0]);}, false);
-    imgElement.onload = function() {
-        let img = cv.imread(imgElement);
-        cv.cvtColor(img, img, cv.COLOR_RGBA2GRAY, 0);
-        cv.adaptiveThreshold(img, img, 200, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 25, 2);
-        let circles = new cv.Mat();
-        let color = new cv.Scalar(255, 0, 0);
-        cv.HoughCircles(img, circles, cv.HOUGH_GRADIENT, 1, 45, 75, 40, 0, 100);
-        for (let i = 0; i < circles.cols; ++i) {
-            let x = circles.data32F[i * 3];
-            let y = circles.data32F[i * 3 + 1];
-            let radius = circles.data32F[i * 3 + 2];
-            let center = new cv.Point(x, y);
-            cv.circle(img, center, radius, color);
-        }
-        cv.imshow('canvasOutput', img);
-        img.delete();
-    };
-    function onOpenCvReady() {
-        document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
-    }
-    </script>
-    <script async src="https://docs.opencv.org/4.5.3/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
-</body>
+    <head>
+        <meta charset="utf-8">
+        <title>Hello OpenCV.js</title>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    </head>
+    <body>
+        <h1>OpenCV Experiments</h1>
+        <div id="accordion">
+            <h3>Input image</h3>
+            <div>
+                <img id="imageSrc" src="real1.jpg" alt="Default Image" />
+                <div>Source image: <input type="file" id="fileInput" name="file" /></div>
+            </div>
+            <h3>Circle detection</h3>
+            <div>
+                <button type="button" id="circlesButton">Circle Detection</button>
+                <button type="button" id="resetCircle">Reset Result</button>
+            <fieldset>
+                <legend>Hough Circles parameters</legend>
+                <table>
+                    <tr>
+                        <td>Minimum distance between circles: </td>
+                        <td>
+                            <div id="circleMinDist" style="width:260px; height:5px;">
+                                <div id="custom-handle-mindist" class="ui-slider-handle"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Param 1: </td>
+                        <td>
+                            <div id="circleParam1" style="width:260px; height:5px;">
+                                <div id="custom-handle1" class="ui-slider-handle"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Param 2: </td>
+                        <td>
+                            <div id="circleParam2" style="width:260px; height:5px;">
+                                <div id="custom-handle2" class="ui-slider-handle"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <div>
+                <canvas id="imageCanvas"></canvas>
+            </div>
+            </div>
+            <h3>Blob detection</h3>
+            <div>
+                <button type="button" id="blobButton">Blob Detection</button>
+                <button type="button" id="resetBlob">Reset Result</button>
+                <fieldset>
+                    <legend>Blob detector parameters</legend>
+                    <table id="blobParams"></table>
+                </fieldset>
+                <div>
+                    <canvas id="blobCanvas"></canvas>
+                </div>
+            </div>
+            <h3 id="status">Status: loading opencv.js...</h3>
+            <div>
+                <p>Nothing to see here</p>
+            </div>
+        </div>
+        <script>$( "#accordion" ).accordion({heightStyle: "content"});</script>
+        <script type="text/javascript" type="text/javascript" src ="SimpleBlobDetector.js"></script>
+        <script type="text/javascript" type="text/javascript" src ="opencv.js"></script>
+        <script async src="https://docs.opencv.org/4.5.3/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+    </body>
 </html>
