@@ -25,11 +25,14 @@ imgElement.onload = function() {
 function resetBlobParams() {
     newParams.minThreshold = 10;
     newParams.maxThreshold = 200;
-    newParams.minArea = 1500;
+    newParams.filterByColor = false;
+    newParams.minArea = 10;
     newParams.filterByCircularity = true;
     newParams.minCircularity = 5000;
     newParams.minConvexity = 0.87;
-    newParams.minIntertiaRatio = 0.01;
+    newParams.minInertiaRatio = 0.01;
+    newParams.maxInertiaRatio = 500;
+
 }
 
 function drawBlob() {
