@@ -132,6 +132,10 @@ document.getElementById('resetBlob').onclick = function() {
     resetBlobImage();
 };
 
+sldr = new mdc.slider.MDCSlider(document.querySelectorAll('.mdc-slider')[0]);
+sldr2 = new mdc.slider.MDCSlider(document.querySelectorAll('.mdc-slider')[1]);
+sldr.root.addEventListener('MDCSlider:change', () => console.log(sldr.getValue()));
+
 function drawCircles() {
     $('#circlesButton').attr("disabled", true);
     oldtext = $('#circlesButton').text();
