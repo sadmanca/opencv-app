@@ -42,7 +42,7 @@ function drawBlob() {
     for (let i = 0; i < keypoints.length; ++i) {
         let radius = keypoints[i].size/2;
         let center = keypoints[i].pt;
-        cv.circle(displayMat, center, radius, [0, 255, 0, 255], 3);
+        cv.circle(displayMat, center, radius, [0, 255, 0, 255], 2);
     }
     cv.imshow('blobCanvas', displayMat);
     srcMat.delete();
